@@ -1,11 +1,13 @@
 const express = require("express");
-const app = express();
 const exhbs = require("express-handlebars");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const Rest = require("./models/restaurant");
-const port = 3000;
+const methodOverride = require("method-override");
 
+const Rest = require("./models/restaurant");
+
+const app = express();
+const port = 3000;
 // DB server set
 mongoose.connect("mongodb://localhost/restaurant-list", {
   useNewUrlParser: true,
@@ -23,6 +25,8 @@ db.once("open", () => {
 app.use(express.static("public"));
 //set body-parser
 app.use(bodyParser.urlencoded({ extended: true }));
+//set method-override
+app.use(methodOverride("_method"));
 
 //set template engine
 app.engine("hbs", exhbs({ defaultLayout: "main", extname: ".hbs" }));
@@ -89,7 +93,7 @@ app.get("/restaurants/:id/edit", (req, res) => {
     .catch((error) => console.error(error));
 });
 
-app.post("/restaurants/:id/edit", (req, res) => {
+app.put("/restaurants/:id", (req, res) => {
   const id = req.params.id;
   return Rest.findById(id)
     .then((rest) => {
@@ -100,16 +104,13 @@ app.post("/restaurants/:id/edit", (req, res) => {
     .catch((error) => console.error(error));
 });
 //刪除清單
-app.post("/restaurants/:id/delete", (req, res) => {
+app.delete("/restaurants/:id", (req, res) => {
   const id = req.params.id;
   return Rest.findById(id)
     .then((rest) => rest.remove())
     .then(() => res.redirect(`/`))
     .catch((error) => console.error(error));
 });
-
-
-
 
 //啟動server
 app.listen(port, () => {
