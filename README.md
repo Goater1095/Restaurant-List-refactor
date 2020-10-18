@@ -1,4 +1,4 @@
-# Restaurant-List CRUD (餐廳清單)
+# Restaurant-List Refactor (餐廳清單)
 
 一個使用 Express + node.js 建立的餐廳清單
 
@@ -20,7 +20,6 @@
 - 使用者可以透過"Edit button" & "修改餐廳內容" 變更餐廳的詳細資訊
 - 使用者可以透過"Detail button"進入看餐廳的詳細資訊
 - 使用者可以透過"Delete button" & "刪除餐廳" 移除不想要的餐廳
-
 
 ### 安裝
 
@@ -58,4 +57,4 @@ npm run dev  //執行程式
 - Body-Parser - url-encoded
 - MongoDB - Data base
 - Mongoose - ODM for MongoDB
-
+- Method-Override - Modify request Verb

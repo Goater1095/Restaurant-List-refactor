@@ -1,17 +1,12 @@
-const mongoose = require('mongoose')
-const restList = require('../../restaurant.json')
+const db = require("../../config/mongoose");
+const restList = require("../../restaurant.json");
 
 // 載入model
-const Rest = require('../restaurant')
-mongoose.connect('mongodb://localhost/restaurant-list', { useNewUrlParser: true, useUnifiedTopology: true })
-const db = mongoose.connection
-db.on('error', () => {
-  console.log('mongodb error!')
-})
-db.once('open', () => {
-  console.log('mongodb connected!')
+const Rest = require("../restaurant");
+
+db.once("open", () => {
   for (let object of restList.results) {
-    Rest.create(object)
+    Rest.create(object);
   }
-  console.log('Done!')
-})
+  console.log("Done!");
+});

@@ -1,26 +1,14 @@
 const express = require("express");
 const exhbs = require("express-handlebars");
-const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 
 const Rest = require("./models/restaurant");
 const routes = require("./routes");
+const port = 3000;
+require("./config/mongoose");
 
 const app = express();
-const port = 3000;
-// DB server set
-mongoose.connect("mongodb://localhost/restaurant-list", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-const db = mongoose.connection;
-db.on("error", () => {
-  console.log("mongodb error!");
-});
-db.once("open", () => {
-  console.log("mongodb connected!");
-});
 
 //set static folder
 app.use(express.static("public"));
