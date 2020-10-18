@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const methodOverride = require("method-override");
 
 const Rest = require("./models/restaurant");
+const routes = require("./routes");
 
 const app = express();
 const port = 3000;
@@ -27,30 +28,14 @@ app.use(express.static("public"));
 app.use(bodyParser.urlencoded({ extended: true }));
 //set method-override
 app.use(methodOverride("_method"));
+//將request 導入router
+app.use(routes);
 
 //set template engine
 app.engine("hbs", exhbs({ defaultLayout: "main", extname: ".hbs" }));
 app.set("view engine", "hbs");
 
 //set route
-app.get("/", (req, res) => {
-  Rest.find()
-    .lean()
-    .then((rests) => res.render("index", { resList: rests }))
-    .catch((error) => console.error(error));
-});
-
-//detail page
-app.get("/restaurants/:id", (req, res) => {
-  const id = req.params.id;
-  Rest.find({ _id: id })
-    .lean()
-    .then(function (rest) {
-      res.render("show", { rest: rest[0] });
-    })
-    .catch((error) => console.error(error));
-});
-
 app.get("/search", (req, res) => {
   const keyword = req.query.keyword.toLowerCase();
   // 不會使用mongoose-find的includes的功能
@@ -69,48 +54,10 @@ app.get("/search", (req, res) => {
     .catch((error) => console.error(error));
 });
 
-// 新增餐廳清單
-//路由不能使用/restaurants/new 會跟36行衝突??
-app.get("/new", (req, res) => {
-  res.render("new");
-});
-
-app.post("/restaurants", (req, res) => {
-  const body = req.body;
-  return Rest.create(body)
-    .then(() => res.redirect("/"))
-    .catch((error) => console.error(error));
-});
-
-//修改清單
-app.get("/restaurants/:id/edit", (req, res) => {
-  const id = req.params.id;
-  return Rest.findById(id)
-    .lean()
-    .then(function (rest) {
-      res.render("edit", { rest });
-    })
-    .catch((error) => console.error(error));
-});
-
-app.put("/restaurants/:id", (req, res) => {
-  const id = req.params.id;
-  return Rest.findById(id)
-    .then((rest) => {
-      rest = Object.assign(rest, req.body);
-      rest.save();
-    })
-    .then(() => res.redirect(`/restaurants/${id}`))
-    .catch((error) => console.error(error));
-});
-//刪除清單
-app.delete("/restaurants/:id", (req, res) => {
-  const id = req.params.id;
-  return Rest.findById(id)
-    .then((rest) => rest.remove())
-    .then(() => res.redirect(`/`))
-    .catch((error) => console.error(error));
-});
+//路由不能使用/restaurants/new 會跟/restaurant/:id衝突??
+// app.get("/new", (req, res) => {
+//   res.render("new");
+// });
 
 //啟動server
 app.listen(port, () => {
