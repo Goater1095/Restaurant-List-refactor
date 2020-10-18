@@ -17,6 +17,7 @@ router.get("/", (req, res) => {
       );
       const searchResult = searchRes.concat(searchRes2);
       res.render("index", { resList: searchResult, keyword });
+      console.log(location.href);
     })
     .catch((error) => console.error(error));
 });
